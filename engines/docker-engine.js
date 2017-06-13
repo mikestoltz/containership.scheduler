@@ -47,7 +47,7 @@ class DockerEngine extends Engine {
                     if(v.indexOf(`$${user_variable_prefix}`) !== -1) {
                         _.forEach(user_variables, (_key) => {
                             if(v.indexOf(`$${_key}`) !== -1) {
-                                const pattern = new RegExp(`$${_key}`, 'g');
+                                const pattern = new RegExp(`\\$${_key}`, 'g');
                                 v = v.replace(pattern, options.user_variables[_key]);
                             }
                         });
@@ -55,7 +55,7 @@ class DockerEngine extends Engine {
 
                     _.forEach(keys, (_key) => {
                         if(v.indexOf(`$${_key}`) !== -1) {
-                            const pattern = new RegExp(`$${_key}`, 'g');
+                            const pattern = new RegExp(`\\$${_key}`, 'g');
                             v = v.replace(pattern, options.env_vars[_key]);
                         }
                     });
