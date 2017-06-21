@@ -188,20 +188,22 @@ class DockerEngine extends Engine {
     }
 
     pull(image, auths, cb) {
-        async.eachSeries(auths, (auth, fn) => {
+        async.someSeries(auths, (auth, fn) => {
             const index = auths.indexOf(auth);
             //For each auth, try to pull
             docker.pull(image, auth, (err, stream) => {
                 if(err) {
                     if(index < _.size(auths) - 1) {
                         // don't error because we need to continue checking the rest of the registries
-                        return fn();
+                        return fn(null, false);
                     } else {
                         return fn(err);
                     }
                 }
 
-                docker.modem.followProgress(stream, fn);
+                docker.modem.followProgress(stream, (err) => {
+                    return fn(err, true);
+                });
 
             });
 
